@@ -3,8 +3,11 @@
 
 //botei pra pessoa diva por o tamanho em Bytes pra facilitar o codigo, mas podemos mudar isso e deixar ela selecionar KB/MB/GB
 void configuracoes(int *tam_mf, int *tam_ms, int *tam_qm, int *tam_end_logico){
-
+    int op;
     printf("Digite o tamanho desejado para cada uma das opcoes abaixo \n");
+
+    printf("1.1 Tamanho Bytes:\n1-KB,\n2-MB,\n3-GB\n");
+    scanf("%d", &op);
 
     printf("1. Tamanho do quadro de memoria em Bytes: \n");
     while(*tam_qm <= 0){
@@ -16,6 +19,23 @@ void configuracoes(int *tam_mf, int *tam_ms, int *tam_qm, int *tam_end_logico){
         scanf("%d", tam_mf);
     } while (*tam_mf % (*tam_qm) != 0);
 
+    switch (op) {
+        case 1:
+            *tam_mf = *tam_mf * 1024;
+            *tam_qm = *tam_qm * 1024;
+            break;
+        case 2:
+            *tam_mf = *tam_mf * (1024 * 1024);
+            *tam_qm = *tam_qm * (1024 * 1024);
+            break;
+        case 3:
+            *tam_mf = *tam_mf * (1024 * 1024 * 1024);
+            *tam_qm = *tam_qm * (1024 * 1024);
+            break;
+        default:
+            printf("Opção inválida!\n");
+            return 1;
+    }
     printf("3. Tamanho da memoria secundaria em Bytes: \n");
     scanf("%d", tam_ms);
 
@@ -43,6 +63,7 @@ void estado_processo(P *processo){
     printf("O processo %s está agora no estado %s. \n", processo->identificador, processo->estado_processo);
 }
 
+
 char listaDeEntradas[5][20] = {
         "Disco",
         "Teclado",
@@ -50,7 +71,7 @@ char listaDeEntradas[5][20] = {
         "Impressora",
         "Som"
     };
-    
+
 void flags(char *acao, char *nome_processo, int tam_processo, MS *m_secundaria, MP *m_principal, int tamanho_end){
 
     P *proc = busca_processo(m_secundaria, nome_processo);
@@ -62,7 +83,7 @@ void flags(char *acao, char *nome_processo, int tam_processo, MS *m_secundaria, 
         proc = novo_processo(m_principal, m_secundaria, nome_processo, tam_processo, (m_principal->tam_mp)/(m_principal->num_quadros), tamanho_end);
         //impressao_p(proc); //resolver primeira flag
     }
-    
+
     else if(flag_processo == 'P'){
         printf("\nP entrou aqui\n");
         //estado_processo(proc);
@@ -75,7 +96,6 @@ void flags(char *acao, char *nome_processo, int tam_processo, MS *m_secundaria, 
     else if(flag_processo == 'I'){
         //estado bloqueado a espera de E/S
         printf("\nI entrou aqui\n");
-        printf("\nI Dispositivo de entrada: %s\n", listaDeEntras[tam_processo]);
         impressao_p(proc);
         instrucao_es();
         impressao_p(proc);
