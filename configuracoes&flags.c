@@ -43,7 +43,13 @@ void estado_processo(P *processo){
     printf("O processo %s está agora no estado %s. \n", processo->identificador, processo->estado_processo);
 }
 
-
+char listaDeEntras[5][20] = {
+        "Disco",
+        "Teclado",
+        "Mouse",
+        "Impressora",
+        "Som"
+    };
 void flags(char *acao, char *nome_processo, int tam_processo, MS *m_secundaria, MP *m_principal, int tamanho_end){
 
     P *proc = busca_processo(m_secundaria, nome_processo);
@@ -68,6 +74,7 @@ void flags(char *acao, char *nome_processo, int tam_processo, MS *m_secundaria, 
     else if(flag_processo == 'I'){
         //estado bloqueado a espera de E/S
         printf("\nI entrou aqui\n");
+        printf("\nI Dispositivo de entrada: %s\n", listaDeEntras[tam_processo]);
         impressao_p(proc);
         instrucao_es();
         impressao_p(proc);
