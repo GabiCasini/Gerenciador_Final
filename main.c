@@ -8,7 +8,7 @@ int main(void){
     // variaveis para manipulação dos arquivos
     char acao;
     char nome_processo[20];//só pra definir algum tamanho máximo
-    int tam_processo;
+    char tam_processo;
 
     // variaveis para manipulação das funções
     int tamanho_mf, tamanho_ms, tamanho_qm, tamanho_end;
@@ -23,7 +23,7 @@ int main(void){
     // alocando a memoria necessaria
     mem_secundaria = inicializa_ms(tamanho_ms);
     mem_principal = inicializa_mp(tamanho_mf, tamanho_qm);
-    
+
     // abrindo o arquivo
     FILE* fila_processos = fopen("processos.txt", "r");
     if(fila_processos == NULL){
@@ -34,13 +34,14 @@ int main(void){
     char tam[3];
 
     while(!feof(fila_processos)){
-        fscanf(fila_processos, "%s %c %d %s", nome_processo, &acao, &tam_processo, tam);
         //fflush(stdin);
+
+        fscanf(fila_processos, "%s %c %s %s", nome_processo, &acao, &tam_processo, tam);
+        printf("\n%s %c %d\n", nome_processo, &acao, &tam_processo);
         flags(acao, nome_processo, tam_processo, mem_secundaria, mem_principal, tamanho_end);
     }
-
     // fechando o arquivo
     fclose(fila_processos);
-    
+
     return 0;
 }

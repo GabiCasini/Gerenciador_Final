@@ -11,21 +11,21 @@ void configuracoes(int *tam_mf, int *tam_ms, int *tam_qm, int *tam_end_logico){
         scanf("%d", tam_qm);
     }
 
-    printf("2. Tamanho da Memória Principal em Bytes: (Deve ser multiplo do tamanho do quadro: %d) \n", *tam_qm);
+    printf("2. Tamanho da Memoria Principal em Bytes: (Deve ser multiplo do tamanho do quadro: %d) \n", *tam_qm);
     do {
         scanf("%d", tam_mf);
     } while (*tam_mf % (*tam_qm) != 0);
 
-    printf("3. Tamanho da memória secundaria em Bytes: \n");
+    printf("3. Tamanho da memoria secundaria em Bytes: \n");
     scanf("%d", tam_ms);
 
-    printf("4. Tamanho do endereço lógico em bits: \n");
+    printf("4. Tamanho do endereço logico em bits: \n");
     scanf("%d", tam_end_logico);
 }
 
 
 void instrucao_cpu (){
-    printf("\nInstrução sendo executada\n");
+    printf("\nInstrucao sendo executada\n");
 }
 void instrucao_es (){
     printf("\nInterromper, ir para bloqueado\n");
@@ -55,7 +55,7 @@ void flags(char flag_processo, char *nome_processo, int tam_processo, MS *m_secu
         instrucao_cpu();
         estado_processo(proc);
     }
-    /*
+
     if(flag_processo ==  'I'){
         //estado bloqueado a espera de E/S
         impressao_p(proc);
@@ -86,8 +86,6 @@ void flags(char flag_processo, char *nome_processo, int tam_processo, MS *m_secu
         //halt();
         impressao_p(proc);
     }
-
-    */
     else {
         printf("Opcao Invalida. \n");
     }

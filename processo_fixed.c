@@ -123,7 +123,7 @@ P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_
     novo->tam_end_logico = tam_end;
     novo->prox = ms->processos;
     ms->processos = novo;
-    printf("O processo %s foi adicionado na MS com sucesso! Obs.: Sua TP associada já está foi iniciada na MP.\n", nome_processo);
+    printf("O processo %s foi adicionado na MS com sucesso! Obs.: Sua TP associada ja foi iniciada na MP.\n", nome_processo);
 
     //adicionando tp desse processo na mp
     add_tp(novo, mp, tam_pag);
@@ -236,7 +236,7 @@ void moverParaFinal(LRU *lista, int val){ //quando for chamado e resetar a prior
     if (aux != NULL) {
         // Se já estiver no final da lista, não há nada a fazer
         if (aux->prox == NULL) {
-            printf("LRU com numero_qd = %d já está no final da lista.\n", val);
+            printf("LRU com numero_qd = %d já esta no final da lista.\n", val);
             return;
         }
 
@@ -289,7 +289,7 @@ void escrever(P* proc, MP* mp, int end){
 
 //if bit_m == 1 na hora de tirar da fila
 void atualizar_ms(){
-    printf("Copiando o conteúdo da página para a Memória Secundária...");
+    printf("Copiando o conteudo da página para a Memória Secundária...");
     printf("MS atualizada com sucesso!");
 }
 
