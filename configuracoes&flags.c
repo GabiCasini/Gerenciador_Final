@@ -44,44 +44,54 @@ void estado_processo(P *processo){
 }
 
 
-void flags(char flag_processo, char *nome_processo, int tam_processo, MS *m_secundaria, MP *m_principal, int tamanho_end){
-
-    P *proc = novo_processo(m_principal, m_secundaria, nome_processo, tam_processo, (m_principal->tam_mp)/(m_principal->num_quadros), tamanho_end);
-
+void flags(char *acao, char *nome_processo, int tam_processo, MS *m_secundaria, MP *m_principal, int tamanho_end){
+    P *proc;
+    char flag_processo = *acao;
+     if(flag_processo=='C'){
+        printf("aqui flag %c", flag_processo);
+     }
     //funcao nao esta funcionando certinho, nao consegue identificar qual é a flag de fato :/
-    if(flag_processo == 'P'){
+    if(flag_processo=='P'){
+         printf("\nP entrou aqui\n");
         estado_processo(proc);
+        printf("\nP entrou aqui\n");
         //busca pag !!!
         instrucao_cpu();
         estado_processo(proc);
     }
 
-    if(flag_processo ==  'I'){
+    if(flag_processo=='I'){
         //estado bloqueado a espera de E/S
+        printf("\nI entrou aqui\n");
         impressao_p(proc);
         instrucao_es();
         impressao_p(proc);
     }
-    if(flag_processo == 'C'){
+    if(flag_processo=='C'){
         //aloca_processo(); ja ta na linha 43
+        printf("\nC entrou aqui\n");
+        proc = novo_processo(m_principal, m_secundaria, nome_processo, tam_processo, (m_principal->tam_mp)/(m_principal->num_quadros), tamanho_end);
         impressao_p(proc); //resolver primeira flag
     }
-    if(flag_processo == 'R'){
+    if(flag_processo=='R'){
         //estado esperando estar na mp --> pronto --> executando
         //busca pag
+        printf("\nR entrou aqui\n");
         impressao_p(proc);
         leitura();
         impressao_p(proc);
     }
-    if(flag_processo == 'W'){
+    if(flag_processo== 'W'){
         //estado esperando estar na mp --> pronto --> executando
         //busca pag
+        printf("\nW entrou aqui\n");
         impressao_p(proc);
         escrita();
         impressao_p(proc);
     }
-    if(flag_processo == 'T'){
+    if(flag_processo=='T'){
         //estado final?? :)
+        printf("\nT entrou aqui\n");
         impressao_p(proc);
         //halt();
         impressao_p(proc);

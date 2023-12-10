@@ -1,5 +1,5 @@
 P1 C 50 KB
-P1 P 0
-P1 R 0 
+P1 P 0 x
+P1 R 0 x
 P7 C 100 KB
-P1 T
+P1 T x x

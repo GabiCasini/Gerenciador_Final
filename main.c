@@ -5,10 +5,6 @@ int main(void){
 
     //setlocale(LC_ALL, "pt_BR.UTF-8");
 
-    // variaveis para manipulação dos arquivos
-    char acao;
-    char nome_processo[20];//só pra definir algum tamanho máximo
-    char tam_processo;
 
     // variaveis para manipulação das funções
     int tamanho_mf, tamanho_ms, tamanho_qm, tamanho_end;
@@ -31,13 +27,26 @@ int main(void){
         exit(1);
     }
 
+    // variaveis para manipulação dos arquivos
+    char acao[3];
+    char nome_processo[3];//só pra definir algum tamanho máximo
+    int tam_processo;
     char tam[3];
 
     while(!feof(fila_processos)){
         //fflush(stdin);
 
-        fscanf(fila_processos, "%s %c %s %s", nome_processo, &acao, &tam_processo, tam);
-        printf("\n%s %c %d\n", nome_processo, &acao, &tam_processo);
+        fscanf(fila_processos, "%s %s %d %s", nome_processo, &acao, &tam_processo, tam);
+       /* if(strcmp(tam, 'KB')==0) {
+            tam_processo=tam_processo*1024;
+        }
+        else if(strcmp(tam, 'MB')==0){
+            tam_processo=tam_processo*(1024*1024);
+        }
+        else if(strcmp(tam, 'GB')==0){
+            tam_processo=tam_processo*(1024*1024*1024);
+        }*/
+        printf("\n%s %s %d %s\n", nome_processo, &acao, tam_processo, tam);
         flags(acao, nome_processo, tam_processo, mem_secundaria, mem_principal, tamanho_end);
     }
     // fechando o arquivo
