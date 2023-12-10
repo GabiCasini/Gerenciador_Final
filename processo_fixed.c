@@ -41,7 +41,7 @@ typedef struct processo { //tabela de paginas do processo fica restritamente na 
 typedef struct conteudo_tp{
     int bit_p;
     int bit_m;
-    int numero_qd; //seria mais facil aqui trabalhar com o numero do quadro e abstrair o offset
+    int numero_qd;
     struct conteudo_tp *prox;
 } ROW;
 
@@ -52,7 +52,7 @@ typedef struct tabela_paginas {
 } TP;
 
 typedef struct least_recently_used {
-    int numero_qd; //fisico //consultar amandinha
+    int numero_qd; //seria mais facil aqui trabalhar com o numero do quadro e abstrair o offset
     struct least_recently_used *prox;
 } LRU;
 
@@ -124,12 +124,23 @@ P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_
     novo->tam_end_logico = tam_end;
     novo->prox = ms->processos;
     ms->processos = novo;
+    //carregar_pg_0
     printf("O processo %s foi adicionado na MS com sucesso! Obs.: Sua TP associada ja foi iniciada na MP.\n", nome_processo);
 
     //adicionando tp desse processo na mp
     add_tp(novo, mp, tam_pag);
 
     return novo; //melhor que seja uma funcao void, mas para testes botei P*
+}
+
+P *busca_processo(MS *m_sec, char *nome_processo){
+    P *aux = m_sec->processos;
+    if(!aux) return NULL;
+    while(aux){
+        if(strcmp(aux->identificador, nome_processo) == 0) return aux;
+        else aux = aux->prox;
+    }
+    return NULL;
 }
 
 void add_tp(P *processo, MP* mp, int size_pag){ //adiciona na memoria principal
