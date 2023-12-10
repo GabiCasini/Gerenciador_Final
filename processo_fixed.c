@@ -8,7 +8,7 @@ IMPLEMENTAR:
 -swapper (funcoes.c)
 -halt (funcoes.c)
 -modificar_tp (quando pagina é trazida pra mp, retirada da mp ou modificada√)
--simulador de atualizacao de processo na ms quando é realizada escrita sobre a pagina na mp (bit_m == 1) 
+-simulador de atualizacao de processo na ms quando é realizada escrita sobre a pagina na mp (bit_m == 1)
 -add printf por todo o codigo para a querida nao ficar perdida
 -depois disso tudo, basta ajustar leitura de arquivo, funcao flags e main()
 
@@ -29,12 +29,12 @@ typedef struct pagina {
 */
 
 typedef struct processo { //tabela de paginas do processo fica restritamente na MP
-    char *identificador; 
-    char *estado_processo; 
-    int tam_imagem; 
+    char *identificador;
+    char *estado_processo;
+    int tam_imagem;
     int tam_pagina;
     int tam_end_logico; //botei aq pra facilitar
-    struct processo *prox; 
+    struct processo *prox;
 } P;
 
 typedef struct conteudo_tp{
@@ -128,11 +128,11 @@ P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_
     //adicionando tp desse processo na mp
     add_tp(novo, mp, tam_pag);
 
-    return novo; //melhor que seja uma funcao void, mas para testes botei P*   
-} 
+    return novo; //melhor que seja uma funcao void, mas para testes botei P*
+}
 
 void add_tp(P *processo, MP* mp, int size_pag){ //adiciona na memoria principal
-	
+
 	int num_paginas = (processo->tam_imagem)/size_pag;
     TP* novo = (TP*)malloc(sizeof(TP));
 
@@ -147,7 +147,7 @@ void add_tp(P *processo, MP* mp, int size_pag){ //adiciona na memoria principal
         p->prox = novo;
         p->prox->id = processo->identificador;
         for(int i = 0; i < num_paginas; i++){
-            p->prox->rows = insere_final(mp->tabela_paginas->rows); 
+            p->prox->rows = insere_final(mp->tabela_paginas->rows);
 	    }
         p->prox->prox = NULL;
     }
@@ -155,7 +155,7 @@ void add_tp(P *processo, MP* mp, int size_pag){ //adiciona na memoria principal
     mp->tabela_paginas = novo;
     mp->tabela_paginas->id = processo->identificador;
 	for(int i = 0; i < num_paginas; i++){
-        mp->tabela_paginas->rows = insere_final(mp->tabela_paginas->rows); 
+        mp->tabela_paginas->rows = insere_final(mp->tabela_paginas->rows);
 	}
     mp->tabela_paginas->prox = NULL;
 }
@@ -174,7 +174,7 @@ ROW *insere_final(ROW *l){
         while (p->prox != NULL){
             p = p->prox;
         }
-        
+
         p->prox = novo;
         return l;
     }
@@ -196,7 +196,7 @@ LRU *insere_fila(LRU *fila, int numero_qd){  //mudei
     }
     aux->prox = novo;
     novo->prox = NULL;
-    
+
     return fila;
 }
 
@@ -213,7 +213,7 @@ int LRU_cheia(LRU *fila, int tam_max){
     return cheia;
 }
 
-LRU *retira_fila(LRU *fila){ 
+LRU *retira_fila(LRU *fila){
     if (fila){
         LRU *aux = fila;
         fila = fila->prox;
@@ -259,7 +259,7 @@ void moverParaFinal(LRU *lista, int val){ //quando for chamado e resetar a prior
 
         printf("LRU com numero_qd = %d movido para o final da lista.\n", val);
     } else {
-        printf("LRU com numero_qd = %d nÃo encontrado na lista.\n", val);
+        printf("LRU com numero_qd = %d nao encontrado na lista.\n", val);
     }
 }
 
@@ -293,7 +293,7 @@ void atualizar_ms(){
     printf("MS atualizada com sucesso!");
 }
 
-void retira_row(int pag, MP* mp, P* proc){ 
+void retira_row(int pag, MP* mp, P* proc){
     ROW* linha = busca_linha(pag, mp, proc);
     linha->bit_p = 0;
     linha->bit_m = 0;
@@ -307,15 +307,15 @@ void add_row(int pag, MP* mp, P* proc, int end_qd){
 }
 
 
-SUBSTITUIR ... por num_quadro
-void carrega_pag_mp(P* processo, MP *m_principal, int end_logico){
+//SUBSTITUIR ... por num_quadro
+/*void carrega_pag_mp(P* processo, MP *m_principal, int end_logico){
 
     //processo esta esperando (Novo ou bloqueado-suspenso)
     int pag = n_pag(end_logico, processo->tam_pagina, processo->tam_end_logico);
     int num_quadro = n_qd();
 
-    if (!LRU_cheia(m_principal->fila_lru, m_principal->tam_mp)){ //Caso 1: MP nao esta cheia 
-        
+    if (!LRU_cheia(m_principal->fila_lru, m_principal->tam_mp)){ //Caso 1: MP nao esta cheia
+
         m_principal->fila_lru = insere_fila(m_principal->fila_lru, ...);
 
         //atualizar tp:
@@ -334,11 +334,11 @@ void carrega_pag_mp(P* processo, MP *m_principal, int end_logico){
     }
 
     printf("A página da imagem do processo %s foi carregada para a MP com sucesso\n", processo->identificador);
-    processo->estado_processo = 'Pronto'; 
+    processo->estado_processo = 'Pronto';
     printf("O processo passou para o estado 'Pronto'\n");
 }
 
-void busca_pagina(P* proc, MP* mp, int end_logico, int qtd_bits_endereco_logico){  
+void busca_pagina(P* proc, MP* mp, int end_logico, int qtd_bits_endereco_logico){
 
     int pag = n_pag(end_logico, proc->tam_pagina, qtd_bits_endereco_logico);
     ROW* linha = busca_linha(pag, mp, proc);
@@ -356,7 +356,7 @@ void busca_pagina(P* proc, MP* mp, int end_logico, int qtd_bits_endereco_logico)
 */
 
 int mp_livre(int livre, MP* mp, P* proc){
-    return livre -= proc->tam_pagina;   
+    return livre -= proc->tam_pagina;
 }
 
 /*

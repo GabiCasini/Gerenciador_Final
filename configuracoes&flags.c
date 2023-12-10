@@ -6,7 +6,7 @@ void configuracoes(int *tam_mf, int *tam_ms, int *tam_qm, int *tam_end_logico){
 
     printf("Digite o tamanho desejado para cada uma das opcoes abaixo \n");
 
-    printf("1. Tamanho do quadro de memoria em Bytes: \n"); 
+    printf("1. Tamanho do quadro de memoria em Bytes: \n");
     while(*tam_qm <= 0){
         scanf("%d", tam_qm);
     }
@@ -63,7 +63,7 @@ void flags(char flag_processo, char *nome_processo, int tam_processo, MS *m_secu
         impressao_p(proc);
     }
     if(flag_processo == 'C'){
-        //aloca_processo(); ja ta na linha 43 
+        //aloca_processo(); ja ta na linha 43
         impressao_p(proc); //resolver primeira flag
     }
     if(flag_processo == 'R'){
@@ -86,9 +86,9 @@ void flags(char flag_processo, char *nome_processo, int tam_processo, MS *m_secu
         //halt();
         impressao_p(proc);
     }
-    
+
     */
     else {
-        printf("Opção Inválida. \n");
+        printf("Opcao Invalida. \n");
     }
 }
