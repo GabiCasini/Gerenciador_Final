@@ -32,20 +32,23 @@ int main(void){
     char nome_processo[3];//só pra definir algum tamanho máximo
     int tam_processo;
     char tam[3];
+    char tipo1[3] = "KB";
+    char tipo2[3] = "MB";
+    char tipo3[3] = "GB";
 
     while(!feof(fila_processos)){
         //fflush(stdin);
 
         fscanf(fila_processos, "%s %s %d %s", nome_processo, &acao, &tam_processo, tam);
-       /* if(strcmp(tam, 'KB')==0) {
+        if(strcmp(tam, tipo1)==0) {
             tam_processo=tam_processo*1024;
         }
-        else if(strcmp(tam, 'MB')==0){
+        else if(strcmp(tam, tipo2)==0){
             tam_processo=tam_processo*(1024*1024);
         }
-        else if(strcmp(tam, 'GB')==0){
+        else if(strcmp(tam, tipo3)==0){
             tam_processo=tam_processo*(1024*1024*1024);
-        }*/
+        }
         printf("\n%s %s %d %s\n", nome_processo, &acao, tam_processo, tam);
         flags(acao, nome_processo, tam_processo, mem_secundaria, mem_principal, tamanho_end);
     }
