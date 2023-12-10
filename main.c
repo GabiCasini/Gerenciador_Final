@@ -40,13 +40,13 @@ int main(void){
         //fflush(stdin);
 
         fscanf(fila_processos, "%s %s %d %s", nome_processo, &acao, &tam_processo, tam);
-        if(strcmp(tam, tipo1)==0) {
+        if(strcmp(tam, tipo1)==0 && tam=='C') {
             tam_processo=tam_processo*1024;
         }
-        else if(strcmp(tam, tipo2)==0){
+        else if(strcmp(tam, tipo2)==0  && tam=='C'){
             tam_processo=tam_processo*(1024*1024);
         }
-        else if(strcmp(tam, tipo3)==0){
+        else if(strcmp(tam, tipo3)==0  && tam=='C'){
             tam_processo=tam_processo*(1024*1024*1024);
         }
         printf("\n%s %s %d %s\n", nome_processo, &acao, tam_processo, tam);

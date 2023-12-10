@@ -47,17 +47,15 @@ void estado_processo(P *processo){
 void flags(char *acao, char *nome_processo, int tam_processo, MS *m_secundaria, MP *m_principal, int tamanho_end){
     P *proc;
     char flag_processo = *acao;
-     if(flag_processo=='C'){
-        printf("aqui flag %c", flag_processo);
-     }
+
     //funcao nao esta funcionando certinho, nao consegue identificar qual é a flag de fato :/
     if(flag_processo=='P'){
         printf("\nP entrou aqui\n");
-        estado_processo(proc);
+        //estado_processo(proc);
         printf("\nP entrou aqui\n");
         //busca pag !!!
         instrucao_cpu();
-        estado_processo(proc);
+        //estado_processo(proc);
     }
 
     else if(flag_processo=='I'){
