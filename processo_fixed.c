@@ -73,7 +73,6 @@ MP *inicializa_mp(int tam_mf, int tam_qm);
 MS *inicializa_ms(int tamanho);
 P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_pag, int tam_end);
 
-
 void add_tp(P *processo, MP* mp, int size_pag);
 ROW *insere_final(ROW *l);
 ROW* busca_linha(int pag, MP* mp, P* proc);
@@ -124,13 +123,14 @@ P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_
     novo->tam_end_logico = tam_end;
     novo->prox = ms->processos;
     ms->processos = novo;
+
     //carregar_pg_0
     printf("O processo %s foi adicionado na MS com sucesso! Obs.: Sua TP associada ja foi iniciada na MP.\n", nome_processo);
 
     //adicionando tp desse processo na mp
     add_tp(novo, mp, tam_pag);
 
-    return novo; //melhor que seja uma funcao void, mas para testes botei P*
+    return novo;
 }
 
 P *busca_processo(MS *m_sec, char *nome_processo){
