@@ -1,9 +1,10 @@
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include<string.h>
 #include <string.h>
 #include "conversoes.c"
-/*
+
 MS *inicializa_ms(int tamanho);
 P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_pag, int tam_end);
 void add_tp(P *processo, MP* mp, int size_pag);
@@ -35,7 +36,7 @@ P *busca_processo(MS *m_sec, char *nome_processo){
     } 
     return NULL;
 }
-/*
+
 void tlse_libera(TLSE *l){
     TLSE *p = l, *t;
     while(p != NULL){
@@ -44,7 +45,7 @@ void tlse_libera(TLSE *l){
         free(t);
     }
 }
-*/
+
 void halt(char *nome_processo, MP *m_princ, MS *m_sec){
     // liberando as linhas da tp
     ROW *aux_row = m_princ->tabela_paginas->rows, *tmp_row;
@@ -95,6 +96,7 @@ void busca_pagina(P* proc, MP* mp, int end_logico){
         //carrega_pag_mp(proc, mp, end_logico);
     }
 }
-*/
+
 int mp_livre(int livre, MP* mp, P* proc){
-    return livre -= proc->tam_pagina;
+    return livre -= proc->tam_pagina
+    */
