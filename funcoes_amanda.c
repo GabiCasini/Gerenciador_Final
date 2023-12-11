@@ -657,8 +657,8 @@ void ver_mp(MP *mp){
     int num_quadros = (mp->num_quadros);
     TP *quadro_paginas = mp->tabela_paginas;
 
-    printf("Estado da MemÃ³ria Principal:\n");
-    printf("NÃºmero total de quadros: %d\n", num_quadros);
+    printf("Estado da Memoria Principal:\n");
+    printf("Numero total de quadros: %d\n", num_quadros);
 
     while(quadro_paginas) {
         printf("  Bit de PresenÃ§a: %d\n", quadro_paginas->bit_p);

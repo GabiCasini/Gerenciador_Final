@@ -6,7 +6,7 @@ void configuracoes(int *tam_mf, int *tam_ms, int *tam_qm, int *tam_end_logico){
     int op;
     printf("Digite o tamanho desejado para cada uma das opcoes abaixo \n");
 
-    printf("1.1 Tamanho Bytes:\n1-KB,\n2-MB,\n3-GB\n");
+    printf("1.1 Tamanho Bytes:\n1-KB\n2-MB\n3-GB\n");
     scanf("%d", &op);
 
     printf("1. Tamanho do quadro de memoria em Bytes: \n");
@@ -84,10 +84,10 @@ void flags(char *acao, char *nome_processo, int tam_processo_ou_end, MS *m_secun
     }
     
     else if(flag_processo == 'P'){
-        //estado_processo(proc);
-        //busca pag !!
+        //int pag = n_pag(tam_processo_ou_end, proc->tam_pagina, proc->tam_end_logico);
+        //busca_pagina(proc, m_principal, pag);
+        printf("\n");
         instrucao_cpu();
-        //estado_processo(proc);
     }
     
     else if(flag_processo == 'I'){
@@ -116,7 +116,8 @@ void flags(char *acao, char *nome_processo, int tam_processo_ou_end, MS *m_secun
     else if(flag_processo == 'T'){
         //estado final?? :)
         impressao_p(proc);
-        halte(nome_processo, m_principal, m_secundaria);
+        ver_mp(m_principal);
+        //halt(nome_processo, m_principal, m_secundaria);
     }
     else {
         printf("Opcao Invalida.\n");

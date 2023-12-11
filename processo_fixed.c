@@ -1,94 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "gerenciador.h"
 #include "conversoes.c"
 
-/*
-IMPLEMENTAR:
--swapper (funcoes.c) -- raio
--halt (funcoes.c) 
--add printf por todo o codigo para a querida nao ficar perdida
--depois disso tudo, basta ajustar leitura de arquivo, funcao flags e main()
-
-//oq acontece se a ms tiver cheia???
-*/
-
-
-typedef struct processo { //tabela de paginas do processo fica restritamente na MP
-    char *identificador;
-    char *estado_processo;
-    int tam_imagem;
-    int tam_pagina;
-    int tam_end_logico; //botei aq pra facilitar
-    struct processo *prox;
-} P;
-
-typedef struct conteudo_tp{
-    int bit_p;
-    int bit_m;
-    int numero_qd;
-    struct conteudo_tp *prox;
-} ROW;
-
-typedef struct tabela_paginas {
-    char *id; //id do processo associado
-    ROW *rows; //linhas da tabela
-    struct tabela_paginas *prox; //cada processo tera uma tp associada e essas estarao localizadas na MP
-} TP;
-
-typedef struct least_recently_used {
-    int numero_qd; //seria mais facil aqui trabalhar com o numero do quadro e abstrair o offset
-    struct least_recently_used *prox;
-} LRU;
-
-typedef struct memoria_principal {
-    int tam_mp;
-    int num_quadros;
-    LRU *fila_lru;
-    TP *tabela_paginas;
-    int qd[]; 
-} MP;
-
-typedef struct memoria_secundaria {
-    int tam_ms;
-    P *processos;
-} MS;
-
-//declaracoes de funcao
-MP *inicializa_mp(int tam_mf, int tam_qm);
-MS *inicializa_ms(int tamanho);
-P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_pag, int tam_end);
-
-void add_tp(P *processo, MP* mp, int size_pag);
-ROW *insere_final(ROW *l);
-ROW* busca_linha(int pag, MP* mp, P* proc);
-P *busca_processo(MS *m_sec, char *nome_processo);
-void busca_pagina(P* proc, MP* mp, int pag);
-void carrega_pag_mp(P* processo, MP *m_principal, int pag);
-
-int LRU_cheia(LRU *fila, int tam_max);
-LRU *insere_fila(LRU *fila, MP* mp);
-LRU *retira_fila(LRU *fila, MP* mp, P* proc);
-void moverParaFinal(LRU *lista, int val);
-
-int quadro_livre(int qd[], int num_qd);
-
-void halt(char *nome_processo, MP *m_princ, MS *m_sec);
-
-void escrever(P* proc, MP* mp, int end);
-void atualizar_ms();
-void retira_row(int pag, MP* mp, P* proc);
-void add_row(int pag, MP* mp, P* proc, int qd);
-
-// --------------------- ACABA ARQUIVO funcoes_fixed.h
+//oq acontece se a ms tiver cheia??
 
 void imprime_processo(P *proc){
-    printf("Informações sobre o processo %s: \n", proc->identificador);
+    printf("\nInformações sobre o processo %s: \n", proc->identificador);
     printf("---------------------------------\n");
     printf("Estado do processo: %s \n", proc->estado_processo);
     printf("Tamanho da imagem: %d \n", proc->tam_imagem);
     printf("Tamanho da página: %d \n", proc->tam_pagina);
-    printf("---------------------------------\n");
+    printf("Numero de páginas: %d \n", (proc->tam_imagem/proc->tam_pagina));
+    printf("---------------------------------\n\n");
+}
+
+void ver_processo(P *proc){
+    printf("Processo %s: \n", proc->identificador);
+    printf("-----------------\n");
+    printf("Estado: %s \n", proc->estado_processo);
+    printf("Tamanho da imagem: %d \n", proc->tam_imagem);
+    printf("Tamanho da página: %d \n", proc->tam_pagina);
+    printf("-----------------\n");
+}
+
+void ver_ms(MS *m_sec){
+    P *aux = m_sec->processos;
+    printf("Informações sobre a Memória Secundária: \n");
+    printf("----------------------------------------\n");
+    printf("Tamanho da memória secundária: %d \n", m_sec->tam_ms);
+    while(aux){
+        ver_processo(aux);
+        aux = aux->prox;
+    }
 }
 
 MP *inicializa_mp(int tam_mf, int tam_qm){
@@ -122,27 +67,22 @@ P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_
     novo->tam_imagem = tam_processo;
     novo->tam_pagina = tam_pag;
     novo->tam_end_logico = tam_end;
+
     novo->prox = ms->processos;
     ms->processos = novo;
+    
 
     //adicionando tp desse processo na mp
     add_tp(novo, mp, tam_pag);
-
     printf("O processo %s foi adicionado na MS com sucesso! Obs.: Sua TP associada ja foi iniciada na MP.\n", nome_processo);
+
+    imprime_processo(novo);
 
     //carregar_pg_0
     busca_pagina(novo, mp, 0);
 
-    /* LRU_cheia(mp->fila_lru, mp->tam_mp);
-    if(){
-        
-        mp->fila_lru = insere_fila(mp->fila_lru, 0);
-        add_row(int pag, MP* mp, P* proc, int qd);
-    else{
-        
-    }*/
+    imprime_processo(novo);
     
-
     return novo;
 }
 
@@ -156,30 +96,9 @@ P *busca_processo(MS *m_sec, char *nome_processo){
     return NULL;
 }
 
-void halte(char *nome_processo, MP *mp, MS *ms){ 
-    TP* tp = mp->tabela_paginas, *ant, *tmp;
 
-    while (strcmp(tp->id, nome_processo) != 0){
-        ant = tp;
-        tp = tp->prox; 
-        tmp = tp->prox; 
-    }
-    ROW* linha = tp->rows;
-
-    while(linha){
-        if (linha->bit_p == 1){
-            printf("retira da fila rapa\n");
-        }
-        linha = linha->prox;
-        free(linha);
-    }
-
-    //ant->prox = tmp; //essa linha ta dando errado pq preciso verificar antes se tem uma tabela só
-    free(tp);
-}
-
-/*
 void retira_qd_fila(LRU *fila, int num_qd){
+    printf("entrou em retira fila");
     LRU *aux = fila, *ant = NULL, *tmp;
     while(aux){
         if(aux->numero_qd == num_qd){
@@ -192,108 +111,107 @@ void retira_qd_fila(LRU *fila, int num_qd){
         ant = aux;
         aux = aux->prox;
     }
+    printf("saiu de retira fila");
 }
 
 void halt(char *nome_processo, MP *m_princ, MS *m_sec){
-    //Consertar o halt
 
     // liberando as linhas da tp e da fila
-    TP *aux_tp = m_princ->tabela_paginas;
-    TP *ant, *tmp_tp;
-    //printf("oiiiiii \n");
+    TP *aux_tp = m_princ->tabela_paginas, *ant, *tmp_tp;
     char *nome = nome_processo;
-    //printf("%d",strcmp(aux_tp->id, nome));
-    // 
-    while(aux_tp){
-        if(strcmp(aux_tp->id, nome) == 0){
-            tmp_tp = aux_tp;
-            printf("entrou aq \n");
-            ant->prox = aux_tp->prox;
-            aux_tp = aux_tp->prox;
-            break;
-        }
-        ant = aux_tp;
-        aux_tp = aux_tp->prox;
-        printf("1 \n");
-    } //
-    //aux_tp->id != nome_processo
-    printf("%s",aux_tp->id);
-    while(strcmp(aux_tp->id, nome) == 0){   
-        tmp_tp = aux_tp;
-        ant = aux_tp;
-        aux_tp = aux_tp->prox;
-        printf("1 \n");
-    }
-    tmp_tp = aux_tp;
-    printf("entrou aq \n");
-    ant->prox = aux_tp->prox;
-    aux_tp = aux_tp->prox;
     
-    ROW *aux_row = aux_tp->rows, *tmp_row;
-    printf("miau \n");
-    while(aux_row){
-        // testar aqui dps
-        if (aux_row->bit_p == 1){
-            printf("2 \n");
-            retira_qd_fila(m_princ->fila_lru, aux_row->numero_qd);
-            printf("3 \n");
+    // aqui checa se o que queremos é o primeiro e se existe mais alguém além dele
+    if(strcmp(aux_tp->id, nome) == 0 && aux_tp->prox){
+        tmp_tp = aux_tp;
+        aux_tp = aux_tp->prox;
+    }
+
+    // aqui checa se o que queremos é o primeiro e se só tem ele na tabela
+    else if(strcmp(aux_tp->id, nome) == 0 && !aux_tp->prox){
+        tmp_tp = aux_tp;
+    }
+    
+    else{ //testar
+        while(aux_tp){
+            if(strcmp(aux_tp->id, nome) == 0){
+                tmp_tp = aux_tp;
+                ant->prox = aux_tp->prox;
+                aux_tp = aux_tp->prox;
+                break;
+            }
+            ant = aux_tp;
+            aux_tp = aux_tp->prox;
         }
-        printf("%d\n", aux_row->numero_qd);
+    }
+
+    ROW *aux_row = tmp_tp->rows, *tmp_row;
+
+    while(aux_row){
+        if (aux_row->bit_p == 1){
+            //retira_qd_fila(m_princ->fila_lru, aux_row->numero_qd);
+        }
+        //printf("%d\n", aux_row->numero_qd);
         tmp_row = aux_row;
         aux_row = aux_row->prox;
-        free(tmp_row);
+        free(tmp_row); //certinho
     }
-    printf("234 \n");
+
     // liberando a tabela de paginas
     free(tmp_tp);
-    
+
     // liberando a memoria secundaria
-    P *aux_ms = m_sec->processos, *ant_ms = NULL, *tmp_ms;
-    while(aux_ms){
-        printf("aiaiaiaaiai \n");
-        if(strcmp(aux_ms->identificador, nome_processo) == 0){
-            printf("lallalaalalal \n");
-            tmp_ms = aux_ms;
-            ant_ms->prox = aux_ms->prox;
-            aux_ms = aux_ms->prox;
-            free(tmp_ms);
-            break;
-            printf("miauuuuu \n");
-        }
-        ant_ms = aux_ms;
+    P *aux_ms = m_sec->processos, *ant_ms, *tmp_ms;
+
+    if(strcmp(aux_ms->identificador, nome) == 0 && aux_ms->prox){
+        tmp_ms = aux_ms;
         aux_ms = aux_ms->prox;
     }
+    // aqui checa se o que queremos é o primeiro e se só tem ele na tabela
+    else if(strcmp(aux_ms->identificador, nome) == 0 && !aux_ms->prox){
+        tmp_ms = aux_ms;
+    }
+    else{
+        while(aux_ms){
+            if(strcmp(aux_ms->identificador, nome_processo) == 0){
+                tmp_ms = aux_ms;
+                ant_ms->prox = aux_ms->prox;
+                aux_ms = aux_ms->prox;
+                break;
+            }
+            ant_ms = aux_ms;
+            aux_ms = aux_ms->prox;
+        }
+    }
+
+    tmp_ms->estado_processo = "Finalizado";
+    imprime_processo(tmp_ms);
+    free(tmp_ms);
+
     printf("Processo %s encerrado com sucesso. \n", nome_processo);
 }
-*/
+
 
 void add_tp(P *processo, MP* mp, int size_pag){ //adiciona na memoria principal
 
 	int num_paginas = (processo->tam_imagem)/size_pag;
     TP* novo = (TP*)malloc(sizeof(TP));
 
+    novo->id = processo->identificador;
+    printf("ID  adicionado na  TP: %s\n", novo->id);
+    novo->prox = NULL;
+
     if (mp->tabela_paginas){
-
         TP* p = mp->tabela_paginas;
-
-        while (p->prox){
-            p = p->prox;
-        }
-
-        p->prox = novo;
-        p->prox->id = processo->identificador;
-        for(int i = 0; i < num_paginas; i++){
-            p->prox->rows = insere_final(mp->tabela_paginas->rows);
-	    }
-        p->prox->prox = NULL;
+        novo->prox = p;
     }
 
     mp->tabela_paginas = novo;
-    mp->tabela_paginas->id = processo->identificador;
-	for(int i = 0; i < num_paginas; i++){
-        mp->tabela_paginas->rows = insere_final(mp->tabela_paginas->rows);
-	}
-    mp->tabela_paginas->prox = NULL;
+    printf("primeiro id da tp:%s\n", mp->tabela_paginas->id);
+
+    for(int i = 0; i < num_paginas; i++){
+            novo->rows = insere_final(mp->tabela_paginas->rows);
+	    }
+
 }
 
 ROW *insere_final(ROW *l){
@@ -410,8 +328,9 @@ ROW* busca_linha(int pag, MP* mp, P* proc){
 
     TP *tab_paginas = mp->tabela_paginas;
 
-    while (tab_paginas->id != proc->identificador){
+    while (strcmp(tab_paginas->id, proc->identificador) != 0){
         tab_paginas = tab_paginas->prox; //encontra a tp do processo
+        printf("aqio busca linha\n");
     }
 
     int i = 0;
@@ -424,7 +343,6 @@ ROW* busca_linha(int pag, MP* mp, P* proc){
 }
 
 void escrever(P* proc, MP* mp, int end){
-
     int pag = n_pag (end, proc->tam_pagina, proc->tam_end_logico);
     ROW* linha = busca_linha(pag, mp, proc);
     linha->bit_m = 1;
@@ -475,8 +393,7 @@ int quadro_livre(int qd[], int num_qd){
     return -1; 
 }
 
-
-void carrega_pag_mp(P* processo, MP *m_principal, int pag){
+void swapper(P* processo, MP *m_principal, int pag){
 
     //processo esta esperando (Novo ou bloqueado-suspenso)
 
@@ -496,7 +413,7 @@ void carrega_pag_mp(P* processo, MP *m_principal, int pag){
     }
 
     printf("A página da imagem do processo %s foi carregada para a MP com sucesso\n", processo->identificador);
-    //processo->estado_processo = 'Pronto'; //da 3 warnings aq
+    processo->estado_processo = "Pronto";
     printf("O processo passou para o estado 'Pronto'\n");
 }
 
@@ -511,10 +428,40 @@ void busca_pagina(P* proc, MP* mp, int pag){
     }
     else{
         printf("Page fault\n");
-        carrega_pag_mp(proc, mp, pag);
+        swapper(proc, mp, pag);
     }
 }
+void ver_fila_lru(MP *memoria_principal){
+    LRU *p;
+    LRU *lst = memoria_principal->fila_lru;
+    printf("Fila LRU: ");
+    for (p = lst; p != NULL; p = p->prox) printf(" %d, ", p->numero_qd);
+}
+void ver_TP(MP *memoria_principal){
+    TP *p = memoria_principal->tabela_paginas;
+    printf("Tabela de Paginas: ");
+    while (p){
+        printf("%s ", p->id);
+        p = p->prox;
+    }
+    //for (p = lst; p != NULL; p = p->prox) printf("%s ", p->id);
+    
+}
+void ver_mp(MP *memoria_principal){
+    printf("\nInformações sobre a Memoria Principal\n");
+    printf("---------------------------------\n");
+    printf("Tamanho da Memoria Principal: %d \n", memoria_principal->tam_mp);
+    printf("Numero de quadros: %d \n", memoria_principal->num_quadros);
+    ver_fila_lru(memoria_principal);
+    printf("\n");
+    ver_TP(memoria_principal);
+    printf("\n---------------------------------\n\n");
+}
 
+/*typedef struct memoria_secundaria {
+    int tam_ms;
+    P *processos;
+} MS;*/
 /*
 int main(){ //testes
 
