@@ -14,7 +14,7 @@ void configuracoes(int *tam_mf, int *tam_ms, int *tam_qm, int *tam_end_logico){
         scanf("%d", tam_qm);
     }
 
-    printf("2. Tamanho da Memoria Principal em Bytes: (Deve ser multiplo do tamanho do quadro: %d) \n", *tam_qm);
+    printf("2. Tamanho da Memoria Principal em Bytes: (Deve ser multiplo do tamanho do quadro)\n");
     do {
         scanf("%d", tam_mf);
     } while (*tam_mf % (*tam_qm) != 0);
@@ -77,10 +77,10 @@ void flags(char *acao, char *nome_processo, int tam_processo_ou_end, MS *m_secun
 
     //int pag = n_pag(end_logico, proc->tam_pagina, proc->tam_end_logico);
 
-    //funcao nao esta funcionando certinho, nao consegue identificar qual é a flag de fato :/
     if(flag_processo == 'C'){
+        //if (m_principal->tabela_paginas){ printf("FLAGtp antiga:%s ", mp->tabela_paginas->id);}
         proc = novo_processo(m_principal, m_secundaria, nome_processo, tam_processo_ou_end, (m_principal->tam_mp)/(m_principal->num_quadros), tamanho_end);
-        //impressao_p(proc); //resolver primeira flag
+
     }
     
     else if(flag_processo == 'P'){

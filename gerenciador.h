@@ -43,7 +43,7 @@ MP *inicializa_mp(int tam_mf, int tam_qm);
 MS *inicializa_ms(int tamanho);
 P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_pag, int tam_end);
 
-void add_tp(P *processo, MP* mp, int size_pag);
+TP *add_tp(P *processo, MP* mp, int size_pag);
 ROW *insere_final(ROW *l);
 ROW* busca_linha(int pag, MP* mp, P* proc);
 P *busca_processo(MS *m_sec, char *nome_processo);

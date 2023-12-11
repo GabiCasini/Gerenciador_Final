@@ -13,7 +13,7 @@ void imprime_processo(P *proc){
     printf("Tamanho da imagem: %d \n", proc->tam_imagem);
     printf("Tamanho da página: %d \n", proc->tam_pagina);
     printf("Numero de páginas: %d \n", (proc->tam_imagem/proc->tam_pagina));
-    printf("---------------------------------\n\n");
+    printf("---------------------------------\n");
 }
 
 void ver_processo(P *proc){
@@ -60,7 +60,6 @@ MS *inicializa_ms(int tamanho){
 P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_pag, int tam_end){
 
     //nao estou verificando se o processo ja existe porque acredito no bom senso das pessoas q vao escrever o arquivo de instrucoes de entrada
-
     P *novo = (P*)malloc(sizeof(P));
     novo->identificador = nome_processo; 
     novo->estado_processo = "Novo";
@@ -71,9 +70,12 @@ P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_
     novo->prox = ms->processos;
     ms->processos = novo;
     
-
     //adicionando tp desse processo na mp
-    add_tp(novo, mp, tam_pag);
+    mp->tabela_paginas = add_tp(novo, mp, tam_pag);
+    printf("tp:%s ", mp->tabela_paginas->id);
+    if (mp->tabela_paginas->prox){
+        printf("tp:%s ", mp->tabela_paginas->prox->id);
+    }
     printf("O processo %s foi adicionado na MS com sucesso! Obs.: Sua TP associada ja foi iniciada na MP.\n", nome_processo);
 
     imprime_processo(novo);
@@ -191,27 +193,26 @@ void halt(char *nome_processo, MP *m_princ, MS *m_sec){
 }
 
 
-void add_tp(P *processo, MP* mp, int size_pag){ //adiciona na memoria principal
-
+TP* add_tp(P *processo, MP* mp, int size_pag){ //adiciona na memoria principal
+   
 	int num_paginas = (processo->tam_imagem)/size_pag;
     TP* novo = (TP*)malloc(sizeof(TP));
 
-    novo->id = processo->identificador;
-    printf("ID  adicionado na  TP: %s\n", novo->id);
-    novo->prox = NULL;
-
     if (mp->tabela_paginas){
-        TP* p = mp->tabela_paginas;
-        novo->prox = p;
+        novo->prox = mp->tabela_paginas;
     }
-
-    mp->tabela_paginas = novo;
-    printf("primeiro id da tp:%s\n", mp->tabela_paginas->id);
-
+    else{
+        novo->prox = NULL; 
+    }
+    
+    novo->id = processo->identificador;
+    printf("ID adicionado na  TP: %s\n", novo->id);
+    
     for(int i = 0; i < num_paginas; i++){
-            novo->rows = insere_final(mp->tabela_paginas->rows);
+            novo->rows = insere_final(novo->rows);
 	    }
 
+    return novo; 
 }
 
 ROW *insere_final(ROW *l){
