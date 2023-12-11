@@ -116,7 +116,7 @@ void flags(char *acao, char *nome_processo, int tam_processo_ou_end, MS *m_secun
     else if(flag_processo == 'T'){
         //estado final?? :)
         impressao_p(proc);
-        //halt(nome_processo, m_principal, m_secundaria);
+        halte(nome_processo, m_principal, m_secundaria);
     }
     else {
         printf("Opcao Invalida.\n");

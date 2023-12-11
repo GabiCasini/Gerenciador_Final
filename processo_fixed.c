@@ -156,6 +156,28 @@ P *busca_processo(MS *m_sec, char *nome_processo){
     return NULL;
 }
 
+void halte(char *nome_processo, MP *mp, MS *ms){ 
+    TP* tp = mp->tabela_paginas, *ant, *tmp;
+
+    while (strcmp(tp->id, nome_processo) != 0){
+        ant = tp;
+        tp = tp->prox; 
+        tmp = tp->prox; 
+    }
+    ROW* linha = tp->rows;
+
+    while(linha){
+        if (linha->bit_p == 1){
+            printf("retira da fila rapa\n");
+        }
+        linha = linha->prox;
+        free(linha);
+    }
+
+    //ant->prox = tmp; //essa linha ta dando errado pq preciso verificar antes se tem uma tabela só
+    free(tp);
+}
+
 /*
 void retira_qd_fila(LRU *fila, int num_qd){
     LRU *aux = fila, *ant = NULL, *tmp;
@@ -172,16 +194,15 @@ void retira_qd_fila(LRU *fila, int num_qd){
     }
 }
 
-
 void halt(char *nome_processo, MP *m_princ, MS *m_sec){
     //Consertar o halt
 
     // liberando as linhas da tp e da fila
     TP *aux_tp = m_princ->tabela_paginas;
     TP *ant, *tmp_tp;
-    printf("oiiiiii \n");
+    //printf("oiiiiii \n");
     char *nome = nome_processo;
-    printf("%d",strcmp(aux_tp->id, nome));
+    //printf("%d",strcmp(aux_tp->id, nome));
     // 
     while(aux_tp){
         if(strcmp(aux_tp->id, nome) == 0){
@@ -243,7 +264,8 @@ void halt(char *nome_processo, MP *m_princ, MS *m_sec){
         aux_ms = aux_ms->prox;
     }
     printf("Processo %s encerrado com sucesso. \n", nome_processo);
-}*/
+}
+*/
 
 void add_tp(P *processo, MP* mp, int size_pag){ //adiciona na memoria principal
 
