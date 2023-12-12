@@ -93,12 +93,12 @@ P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_
     ms->processos = novo;
     printf("O processo %s foi adicionado na MS com sucesso! Obs.: Sua TP associada ja foi iniciada na MP.\n", nome_processo);
 
-    imprime_processo(novo);
+    //imprime_processo(novo);
 
     //carregar_pg_0
     busca_pagina(novo, mp, 0);
 
-    imprime_processo(novo);
+    //imprime_processo(novo);
     
     return novo;
 }
@@ -520,17 +520,13 @@ void ver_mp(MP *memoria_principal){
     printf("\n---------------------------------\n\n");
 }
 
-/*typedef struct memoria_secundaria {
-    int tam_ms;
-    P *processos;
-} MS;*/
 /*
 int main(){ //testes
 
     MP* mp = inicializa_mp(10, 1); //(tam_mp, tam_qd)
     MS* ms = inicializa_ms(20); //(tam_ms)
     P* proc = novo_processo(mp, ms, "P1", 5, 1, 4); //(tam_P1, tam_pag) -- teremos 5 paginas.
-
+    proc = novo_processo(mp, ms, "P2", 2, 1, 4);
     return 0;
 }
 */
