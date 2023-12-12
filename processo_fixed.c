@@ -62,20 +62,35 @@ P *novo_processo(MP* mp, MS *ms, char *nome_processo, int tam_processo, int tam_
     //nao estou verificando se o processo ja existe porque acredito no bom senso das pessoas q vao escrever o arquivo de instrucoes de entrada
     P *novo = (P*)malloc(sizeof(P));
     novo->identificador = nome_processo; 
+    if(strcmp(nome_processo, "P1") == 0) novo->id_numerico = 1;
+    else if(strcmp(nome_processo, "P2") == 0) novo->id_numerico = 2;
+    else if(strcmp(nome_processo, "P3") == 0) novo->id_numerico = 3;
     novo->estado_processo = "Novo";
     novo->tam_imagem = tam_processo;
     novo->tam_pagina = tam_pag;
     novo->tam_end_logico = tam_end;
 
-    novo->prox = ms->processos;
-    ms->processos = novo;
+    //novo->prox = ms->processos;
+    //ms->processos = novo;
     
     //adicionando tp desse processo na mp
     mp->tabela_paginas = add_tp(novo, mp, tam_pag);
+    printf("Tabela de páginas: \n");
+    TP *aux_tpp = mp->tabela_paginas;
+    while(aux_tpp){
+        printf("id numerico do processo: %d", aux_tpp->id_processo);
+        printf("id string do processo: %s \n", aux_tpp->id);
+        aux_tpp = aux_tpp->prox;
+    }
+    printf("\n");
+    /*
     printf("tp:%s ", mp->tabela_paginas->id);
     if (mp->tabela_paginas->prox){
         printf("tp:%s ", mp->tabela_paginas->prox->id);
     }
+    */
+    novo->prox = ms->processos;
+    ms->processos = novo;
     printf("O processo %s foi adicionado na MS com sucesso! Obs.: Sua TP associada ja foi iniciada na MP.\n", nome_processo);
 
     imprime_processo(novo);
@@ -197,22 +212,66 @@ TP* add_tp(P *processo, MP* mp, int size_pag){ //adiciona na memoria principal
    
 	int num_paginas = (processo->tam_imagem)/size_pag;
     TP* novo = (TP*)malloc(sizeof(TP));
+    char *nome = processo->identificador;
 
+    printf("oiiii \n");
+    /*
     if (mp->tabela_paginas){
+        printf("lalalalalal \n");
         novo->prox = mp->tabela_paginas;
+        mp->tabela_paginas = novo;
     }
     else{
         novo->prox = NULL; 
     }
-    
-    novo->id = processo->identificador;
-    printf("ID adicionado na  TP: %s\n", novo->id);
-    
+    */
+    printf("processo: %d \n", processo->id_numerico);
+    printf("processo: %s \n", nome);
+    novo->id = nome;
+    //printf("ID adicionado na  TP: %s\n", novo->id);
+    /*
     for(int i = 0; i < num_paginas; i++){
-            novo->rows = insere_final(novo->rows);
-	    }
+        printf("%d \n", i);
+        novo->rows = insere_final(novo->rows);
+    }
 
     return novo; 
+    */
+
+    /*
+    TLSE *tlse_insere_inicio(TLSE *l, int x){
+    TLSE *novo = (TLSE*)malloc(sizeof(TLSE));
+    novo->info = x;
+    novo->prox = l;
+    return novo;
+}*/
+
+    //TP *novo = (TP*)malloc(sizeof(TP));
+    //strcpy(novo->id, processo->identificador);
+    printf("ID adicionado na  TP: %s\n", novo->id);
+
+    for(int i = 0; i < num_paginas; i++){
+        printf("%d \n", i);
+        novo->rows = insere_final(novo->rows);
+    }
+
+    // ROW *aux_r = novo->rows;
+    // printf("tabela de paginas: \n");
+    // TP *auxx = novo;
+    // while(auxx){
+    //     printf("processo %d: \n", auxx->id_processo);
+    //     printf("%s: \n", auxx->id);
+    //     while(aux_r){
+    //         printf("%d - ", aux_r->numero_qd);
+    //         aux_r = aux_r->prox;
+    //     }
+    //     auxx = auxx->prox;
+    //     printf("------------------\n");
+    // }
+    // printf("\n");
+    novo->prox = mp->tabela_paginas;
+    printf("saida \n");
+    return novo;
 }
 
 ROW *insere_final(ROW *l){
@@ -432,12 +491,14 @@ void busca_pagina(P* proc, MP* mp, int pag){
         swapper(proc, mp, pag);
     }
 }
+
 void ver_fila_lru(MP *memoria_principal){
     LRU *p;
     LRU *lst = memoria_principal->fila_lru;
     printf("Fila LRU: ");
     for (p = lst; p != NULL; p = p->prox) printf(" %d, ", p->numero_qd);
 }
+
 void ver_TP(MP *memoria_principal){
     TP *p = memoria_principal->tabela_paginas;
     printf("Tabela de Paginas: ");

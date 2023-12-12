@@ -1,5 +1,6 @@
 typedef struct processo { //tabela de paginas do processo fica restritamente na MP
     char *identificador;
+    int id_numerico;
     char *estado_processo;
     int tam_imagem;
     int tam_pagina;
@@ -15,6 +16,7 @@ typedef struct conteudo_tp{
 } ROW;
 
 typedef struct tabela_paginas {
+    int id_processo;
     char *id; //id do processo associado
     ROW *rows; //linhas da tabela
     struct tabela_paginas *prox; //cada processo tera uma tp associada e essas estarao localizadas na MP
